@@ -11,9 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
-import React, { useState } from 'react';
-import { Users } from '../../dummyData';
-
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { format } from 'timeago.js';
 const useStyles = makeStyles((theme) => ({
   root: {
     // maxWidth: 345,
@@ -41,8 +41,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Post({ post }) {
   const classes = useStyles();
-  const [like, setLike] = useState(post.like);
+  console.log(post);
+  const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
+  const [user, setUser] = useState({});
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const res = await axios.get(`users/${post.userId}`);
+      setUser(res.data);
+    };
+    fetchPosts();
+  }, [post.userId]);
 
   const likeHandler = () => {
     setLike(isLiked ? like - 1 : like + 1);
@@ -56,7 +67,7 @@ export default function Post({ post }) {
         avatar={
           <Avatar
             alt="Cindy Baker"
-            src={Users.filter((u) => u.id === post?.userId)[0].profilePicture}
+            src={user.profilePicture || PF + 'person/noAvatar.png'}
           />
         }
         action={
@@ -65,7 +76,8 @@ export default function Post({ post }) {
           </IconButton>
         }
         titleTypographyProps={{ className: classes.title }}
-        title={Users.filter((u) => u.id === post?.userId)[0].username}
+        title={user.username}
+        subheader={format(post.createdAt)}
       />
 
       <CardContent>
@@ -73,9 +85,10 @@ export default function Post({ post }) {
           {post?.desc}
         </Typography>
       </CardContent>
+
       <CardMedia
         className={classes.media}
-        image={post.photo}
+        image={PF + post.img}
         title="Paella dish"
       />
       <CardActions disableSpacing>

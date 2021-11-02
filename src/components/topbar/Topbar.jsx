@@ -15,9 +15,9 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import PeopleIcon from '@material-ui/icons/People';
-import Link from '@material-ui/core/Link';
+// import Link from '@material-ui/core/Link';
 import Avatar from '@material-ui/core/Avatar';
-
+import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 0.5,
@@ -85,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
   link: {
     color: 'white',
     margin: '0 10px',
+    textDecoration: 'none',
     '&:hover': {
       textDecoration: 'none',
     },
@@ -177,9 +178,11 @@ export default function Topbar() {
     <div className={classes.grow}>
       <AppBar position="fixed" style={{ background: '#1597E5' }}>
         <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
-            SCARLETSOCIAL
-          </Typography>
+          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+            <Typography className={classes.title} variant="h6" noWrap>
+              SCARLETSOCIAL
+            </Typography>
+          </Link>
 
           <div className={classes.grow} />
           <div className={classes.grow}>
@@ -201,22 +204,18 @@ export default function Topbar() {
             <div className={classes.sectionDesktop}>
               <div>
                 <Link
+                  to="/"
                   className={classes.link}
-                  component="button"
+                  // component="button"
                   variant="body2"
-                  onClick={() => {
-                    console.info("I'm a button.");
-                  }}
                 >
                   Home page
                 </Link>
                 <Link
+                  to="/"
                   className={classes.link}
-                  component="button"
+                  // component="button"
                   variant="body2"
-                  onClick={() => {
-                    console.info("I'm a button.");
-                  }}
                 >
                   Timeline
                 </Link>

@@ -19,10 +19,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CloseFriend({ user }) {
   const classes = useStyles();
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <div className={classes.root}>
-      <Avatar alt="Remy Sharp" src={user.profilePicture} />
+      <Avatar alt="Remy Sharp" src={PF + user.profilePicture} />
       <span className={classes.userName}>{user.username}</span>
     </div>
   );
