@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { alpha, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,9 +15,9 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import PeopleIcon from '@material-ui/icons/People';
-// import Link from '@material-ui/core/Link';
 import Avatar from '@material-ui/core/Avatar';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 0.5,
@@ -96,6 +96,9 @@ export default function Topbar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  //  render user data
+  const { user } = useContext(AuthContext);
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -246,19 +249,24 @@ export default function Topbar() {
             </div>
           </div>
 
-          <IconButton
-            edge="end"
-            aria-label="account of current user"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            color="inherit"
-          >
-            <Avatar
-              alt="Cindy Baker"
-              src="http://localhost:3000/assets/person/1.jpeg"
-            />
-          </IconButton>
+          <Link to={`/profile/${user.username}`}>
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              color="inherit"
+            >
+              <Avatar
+                alt="Cindy Baker"
+                src={
+                  user.profilePicture
+                    ? PF + user.profilePicture
+                    : PF + 'person/noAvatar.jpg'
+                }
+              />
+            </IconButton>
+          </Link>
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"
