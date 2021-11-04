@@ -12,9 +12,11 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { format } from 'timeago.js';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import _size from 'lodash';
 const useStyles = makeStyles((theme) => ({
   root: {
     // maxWidth: 345,
@@ -42,11 +44,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Post({ post }) {
   const classes = useStyles();
-  console.log(post);
-  const [like, setLike] = useState(post.likes.length);
+
+  const [like, setLike] = useState(_size(post.likes));
   const [isLiked, setIsLiked] = useState(false);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const { user: currentUser } = useContext(AuthContext);
   const [user, setUser] = useState({});
+
+  useEffect(() => {
+    setIsLiked(post.likes.includes(currentUser._id));
+  }, [currentUser._id, post.likes]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -57,10 +64,13 @@ export default function Post({ post }) {
   }, [post.userId]);
 
   const likeHandler = () => {
+    try {
+      axios.put(`/posts/${post._id}/like`, { userId: currentUser._id });
+    } catch (error) {}
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
- 
+
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -71,7 +81,11 @@ export default function Post({ post }) {
           >
             <Avatar
               alt="Cindy Baker"
-              src={user.profilePicture || PF + 'person/noAvatar.jpg'}
+              src={
+                user.profilePicture
+                  ? PF + user.profilePicture
+                  : PF + 'person/noAvatar.jpg'
+              }
             />
           </Link>
         }

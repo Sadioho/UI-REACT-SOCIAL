@@ -10,7 +10,7 @@ export default function Profile() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState({});
   const username = useParams().username;
-
+  console.log('id', user._id);
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await axios.get(`/users?username=${username}`);
@@ -28,12 +28,20 @@ export default function Profile() {
             <div className="profileCover">
               <img
                 className="profileCoverImg"
-                src={user.coverPicture || PF + 'person/noCover.jpg'}
+                src={
+                  user.coverPicture
+                    ? PF + user.coverPicture
+                    : PF + 'person/noCover.jpg'
+                }
                 alt=""
               />
               <img
                 className="profileUserImg"
-                src={user.profilePicture || PF + 'person/noAvatar.jpg'}
+                src={
+                  user.profilePicture
+                    ? PF + user.profilePicture
+                    : PF + 'person/noAvatar.jpg'
+                }
                 alt=""
               />
             </div>
